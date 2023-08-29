@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -17,12 +22,48 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        //
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required'
+        ]);
+
+        $user = User::where('email',$request->email)->first();
+
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => ['email incorrect']
+            ]);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => ['password incorrect']
+            ]);
+        }
+
+        $token = $user->createToken('api-token')->plainTextToken;
+        return response()->json([
+            'token' => $token,
+            'user' => new UserResource($user),
+        ]);
     }
 
     public function logout(Request $request)
     {
-        //
+        $token = $request->bearerToken();
+
+
+        if (!$token) {
+            return response()->json(['message' => 'Token not provided'], 401);
+        }
+
+        if (!$request->user()->tokenCan($token)) {
+            return response()->json(['message' => 'Invalid token'], 401);
+        }
+
+        $request->user()->tokens()->where('id', $request->user()->currentAccessToken()->id)->delete();
+
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
     /**
