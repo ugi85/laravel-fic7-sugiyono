@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\Midtrans\CreatePaymentUrlService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -27,6 +28,13 @@ class OrderController extends Controller
                 'quantity' => $item['quantity']
             ]);
         }
+
+        //manggil api midtrans
+        $midtrans = new CreatePaymentUrlService();
+        $paymentUrl = $midtrans->getPaymentUrl($order->load('user','orderItems'));
+        $order->update([
+            'payment_url'=> $paymentUrl
+        ]);
 
         return response()->json([
             'data'=>  $order

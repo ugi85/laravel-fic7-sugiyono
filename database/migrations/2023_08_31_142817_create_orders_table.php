@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('number',16);
             $table->decimal('total_price',10,2);
             $table->enum('payment_status',['1'.'2','3']);
+            $table->string('payment_url')->nullable();
             $table->text('delivery_address')->nullable();
             $table->timestamps();
 
