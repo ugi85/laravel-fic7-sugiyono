@@ -21,7 +21,7 @@ class OrderFactory extends Factory
             'total_price'=> fake()->numberBetween(15000,50000),
             'payment_status' =>'1',
             'user_id' =>'1',
-            'seller_id' =>'2',
+            'seller_id' =>'2'
         ];
     }
 }
