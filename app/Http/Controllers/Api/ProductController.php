@@ -18,7 +18,7 @@ class ProductController extends Controller
         $products = Product::when(
             $categoryId,
             fn($query, $categoryId) => $query->categoryId($categoryId)
-        )->paginate();
+        )->paginate()->load('category');
         return ProductResource::collection($products) ;
     }
 
