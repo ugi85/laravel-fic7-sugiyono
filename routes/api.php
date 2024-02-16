@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\CallbackController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
@@ -36,3 +37,6 @@ Route::post('midtrans/notification/handling',[CallbackController::class, 'callba
 
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('product', ProductController::class);
+Route::apiResource('banners',BannerController::class);
+
+
