@@ -15,8 +15,20 @@ class UploadController extends Controller
         $image->move($path, $namaFile);
 
         return response()->json([
-            'image_path' => 'upload/image'. $namaFile,
+            'image_path' => '/upload/images/'. $namaFile,
             'base_url' => url('/'),
         ]);
+
+        //  if ($request->has('image')) {
+        //     $image = $request->image;
+        //     $nameFile = time() . '.' . $image->getClientOriginalExtension();
+        //     $path = public_path('upload/images');
+        //     $image->move($path, $nameFile);
+
+        //     return response()->json([
+        //         'image_path' => '/upload/images/' . $nameFile,
+        //         'base_url' => url('/'),
+        //     ]);
+        // }
     }
 }
